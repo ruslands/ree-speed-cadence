@@ -1,0 +1,64 @@
+@startuml
+title ANT+ Speed/Cadence Sensor Lifecycle
+
+actor "Cycling Computer" as Computer
+participant "Sensor Firmware" as Sensor
+participant "IMU (LSM6DS3)" as IMU
+participant "Magnetometer (LIS3MDL)" as MAG
+participant "ANT+ Stack" as ANT
+
+== Power On ==
+Sensor -> Sensor : Power-up on battery insert
+Sensor -> Sensor : Check stored mode
+
+alt First-time startup
+    Sensor -> Sensor : Default to Speed mode
+else Already configured
+    Sensor -> Sensor : Load saved mode
+end
+
+Sensor -> IMU : Initialize
+Sensor -> MAG : Initialize
+Sensor -> ANT : Configure ANT+ BSC channel
+ANT -> Computer : Start advertising
+
+== Pairing ==
+alt Computer is listening
+    Computer -> ANT : Pair request
+    ANT -> Sensor : Channel opened
+else Computer not listening
+    ANT -> Computer : Continue advertising
+end
+
+== Sleep Cycle ==
+Sensor -> Sensor : Enter sleep mode
+
+== Wake Events ==
+alt Motion Detected
+    IMU -> Sensor : Interrupt (motion)
+    Sensor -> IMU : Read data
+    Sensor -> MAG : Read data
+    Sensor -> Sensor : Calculate speed or cadence
+    Sensor -> ANT : Format ANT+ message
+    ANT -> Computer : Transmit data
+else RTC Timeout
+    Sensor -> Sensor : Wake by timer
+    Sensor -> IMU : Poll data
+    Sensor -> MAG : Poll data
+    Sensor -> Sensor : Check for movement
+    alt Movement detected
+        Sensor -> Sensor : Calculate speed or cadence
+        Sensor -> ANT : Format ANT+ message
+        ANT -> Computer : Transmit data
+    else No movement
+        Sensor -> Sensor : Skip transmission
+    end
+else No wake
+    Sensor -> Sensor : Stay in sleep mode
+end
+
+== Mode Switching ==
+Sensor -> Sensor : Battery removed and reinserted
+Sensor -> Sensor : Toggle mode (Speed <-> Cadence)
+
+@enduml

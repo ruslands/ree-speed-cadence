@@ -1,0 +1,92 @@
+
+I’m developing a **cycling speed and cadence sensor** using a custom PCB with the following components:
+
+* **NRF52810-QCAA-R7** – ANT+ capable SoC
+* **LSM6DS3TR** – 6-axis IMU (accelerometer + gyroscope)
+* **LIS3MDL** – 3-axis magnetometer
+
+I'm using **VS Code** for development and the **nRF5 SDK** (not Zephyr). The device will communicate using the **ANT+ protocol only** — BLE is not required.
+
+Please assist with the following:
+
+---
+
+### 1. Define the project structure
+
+Propose a clean, modular, and scalable C firmware project layout for the **nRF5 SDK**, designed for use in **VS Code**. Include explanations for each folder/file and suggest a build system compatible with the SDK.
+
+---
+
+### 2. Generate a basic firmware template (C code)
+
+Create an initial firmware skeleton that includes:
+
+* System and clock initialization for NRF52810
+* SPI/I2C setup for LSM6DS3TR and LIS3MDL
+* ANT+ broadcasting (Cycling Speed and Cadence Profile)
+* Modular code with comments for easy scaling
+
+---
+
+### 3. Integrate advanced functionality
+
+Include the following design considerations and hooks (do not implement fully yet):
+
+* 🔋 **Power management**:
+
+  * Sleep modes (System ON/OFF)
+  * Sensor power control (via GPIO)
+  * Wake on motion or timer
+
+* 🧾 **Logging**:
+
+  * Optional debug logging via RTT or UART
+  * Configurable log levels (info/warning/error)
+
+* 🧠 **Sensor fusion algorithms**:
+
+  * Structure for integrating sensor fusion (e.g., for wheel RPM vs crank RPM)
+  * Use of accelerometer + gyroscope for cadence estimation
+  * Optional magnetometer integration for heading or motion validation
+
+---
+
+### 4. Documentation / Wiki structure
+
+Suggest a documentation structure (e.g., GitHub Wiki) with sections for:
+
+* Project overview
+* Hardware description
+* Firmware modules
+* ANT+ communication
+* Sensor interfacing (IMU + magnetometer)
+* Sensor fusion design
+* Power management
+* Logging and debug
+* Build and flashing guide
+* Known issues and troubleshooting
+
+---
+
+### 5. Firmware flashing instructions (J-Link)
+
+Provide step-by-step documentation to:
+
+* Connect J-Link over SWD
+* Install required tools (nRF Command Line Tools, SEGGER J-Link)
+* Flash `.hex` or `.bin` files via command line or integrate with VS Code
+* Verify success and debug via RTT or UART
+
+---
+
+### 6. Search and summarize real-world examples
+
+Find existing **open-source projects** that implement:
+
+* Cycling speed/cadence sensors
+* ANT+ protocol using NRF5 SDK (especially for NRF52810)
+* Use of IMUs or magnetometers (especially LSM6DS3TR or LIS3MDL)
+* Bonus: Projects with power management, logging, or sensor fusion
+
+Summarize their relevance, structure, and features.
+
